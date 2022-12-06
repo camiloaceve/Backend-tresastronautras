@@ -1,0 +1,216 @@
+openapi: 3.0.0
+info:
+  title: test tresastronautas
+  description: Service for test in backend
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api
+    description: Local server description, e.g. You have to run test tresastronautas in your machine with command "npm run dev".
+paths:
+  /usuario/register:
+    post:
+      summary: Register user in the system
+      tags: [Usuario]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequestDto"
+            example:
+              name: Stanton
+              email: Wilhelm75@yahoo.com
+              password: 12312313
+      responses:
+        200:
+          description: Response of create user operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterUserResponseDto"
+              example:
+                data: null,
+                success: true
+                notification:
+                  status: 200
+                  message: "La operación se realizó con exito"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponseDto"
+  /usuario/login:
+    post:
+      summary: Login user in the system
+      tags: [Usuario]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequestDto"
+      responses:
+        200:
+          description: Token for the user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponseDto"
+        401:
+          description: Bad credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponseDto"
+  /producto:
+     post:
+      summary: add product in the system
+      tags: [Producto]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductRequestDto"
+            example:
+              owner: "asdas54d8as4d87a88sa7d8"
+              name: "Pc"
+              price: 2300000
+      responses:
+        200:
+          description: Response of create user operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductResponseDto"
+              example:
+                data: null,
+                success: true
+                notification:
+                  status: 200
+                  message: "La operación se realizó con exito"
+        500:
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponseDto"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ApiNotificationDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: message identifier
+        status:
+          type: number
+          description: operation status
+        message:
+          type: string
+          description: operation message
+    ApiResponseDto:
+      type: object
+      properties:
+        data:
+          type: string
+          description: data that will be sent to the client
+        success:
+          type: boolean
+          description: indicates if the operation was success or not
+        notification:
+          $ref: "#/components/schemas/ApiNotificationDto"
+    RegisterUserRequestDto:
+      type: object
+      required:
+        - "name"
+        - "email"
+        - "password"
+      properties:
+        name:
+          type: string
+          description: User name
+        email:
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+    RegisterUserResponseDto:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+        success:
+          type: boolean
+          description: Success operation
+        notification:
+          $ref: "#/components/schemas/ApiNotificationDto"
+    LoginRequestDto:
+      type: object
+      required:
+        - "email"
+        - "password"
+      properties:
+        email:
+          type: string
+          description: User email
+        password:
+          type: string
+          description: User password
+    TokenDto:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Generated token for user credentials
+        email:
+          type: string
+          description: Client email
+        role:
+          type: string
+          description: Client role
+    LoginResponseDto:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/TokenDto"
+        success:
+          type: boolean
+          description: Success operation
+        notification:
+          $ref: "#/components/schemas/ApiNotificationDto"
+    ProductRequestDto:
+      type: object
+      required:
+        - "owner"
+        - "emanameil"
+        - "price"
+      properties:
+        owner:
+          type: string
+          description: User add product
+        name:
+          type: string
+          description: Product name
+        price:
+          type: number
+          description: Product price
+    ProductResponseDto:
+      type: object
+      properties:
+        data:
+          type: object
+          nullable: true
+        success:
+          type: boolean
+          description: Success operation
+        notification:
+          $ref: "#/components/schemas/ApiNotificationDto"

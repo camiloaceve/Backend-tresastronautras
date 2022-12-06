@@ -7,9 +7,18 @@ const token = require("../services/token")
 // crear usuario
 async function addUser(req, res, next) {
 	try {
-		req.body.password = await bcrypt.hash(req.body.password, 10)
-		const reg = await models.Usuario.create(req.body)
-		res.status(200).json(reg)
+		const user = await models.Usuario.findOne({
+			email: req.body.email,
+		})
+
+		if (user) {
+			return res.status(400).json({ error: 'El correo ya esta registrado' })
+		} else {
+			req.body.password = await bcrypt.hash(req.body.password, 10)
+			const reg = await models.Usuario.create(req.body)
+			res.status(200).json(reg)
+		}
+
 	} catch (error) {
 		res.status(500).send({
 			message: "Ocurrio un error",
