@@ -21,7 +21,7 @@ URL=http://localhost:4000/api/usuario/register
 
 Recibe
 {
-"password": "Operativo",
+"password": "123456789.",
 "name": "test",
 "email": "test@test.com",
 }
